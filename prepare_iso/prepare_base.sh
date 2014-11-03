@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+#sudo prepare_iso/prepare_iso.sh "/Users/stallman/gnuhubdata/download/MACOSX10.9.4_0.dmg" out
+
+
 #!/bin/sh
 #
 # Preparation script for an OS X automated installation for use with VeeWee/Packer/Vagrant
@@ -55,74 +59,33 @@ if [ $(id -u) -ne 0 ]; then
 	exit 1
 fi	
 
-ESD="$1"
-if [ ! -e "$ESD" ]; then
-	msg_error "Input installer image $ESD could not be found! Exiting.."
-	exit 1
-fi
 
-if [ -d "$ESD" ]; then
-	# we might be an install .app
-	if [ -e "$ESD/Contents/SharedSupport/InstallESD.dmg" ]; then
-		ESD="$ESD/Contents/SharedSupport/InstallESD.dmg"
-	else
-		msg_error "Can't locate an InstallESD.dmg in this source location $ESD!"
-	fi
-fi
+
 
 SCRIPT_DIR="$(cd $(dirname "$0"); pwd)"
 VEEWEE_DIR="$(cd "$SCRIPT_DIR/../../../"; pwd)"
 VEEWEE_UID=$(stat -f %u "$VEEWEE_DIR")
 VEEWEE_GID=$(stat -f %g "$VEEWEE_DIR")
-DEFINITION_DIR="$(cd $SCRIPT_DIR/..; pwd)"
+DEFINITION_DIR="$(cd '$SCRIPT_DIR/..'; pwd)"
 
-if [ "$2" == "" ]; then
-    msg_error "Currently an explicit output directory is required as the second argument."
-	exit 1
-	# The rest is left over from the old prepare_veewee_iso.sh script. Not sure if we
-    # should leave in this functionality to automatically locate the veewee directory.
-	DEFAULT_ISO_DIR=1
-	OLDPWD=$(pwd)
-	cd "$SCRIPT_DIR"
-	# default to the veewee/iso directory
-	if [ ! -d "../../../iso" ]; then
-		mkdir "../../../iso"
-		chown $VEEWEE_UID:$VEEWEE_GID "../../../iso"
-	fi
-	OUT_DIR="$(cd $SCRIPT_DIR; cd ../../../iso; pwd)"
-	cd "$OLDPWD" # Rest of script depends on being in the working directory if we were passed relative paths
-else
-	OUT_DIR="$2"
-fi
 
+OUT_DIR="$2"
 if [ ! -d "$OUT_DIR" ]; then
 	msg_status "Destination dir $OUT_DIR doesn't exist, creating.."
 	mkdir -p "$OUT_DIR"
 fi
 
-if [ -e "$ESD.shadow" ]; then
-	msg_status "Removing old shadow file.."
-	rm "$ESD.shadow"
-fi
 
-MNT_ESD=$(/usr/bin/mktemp -d /tmp/veewee-osx-esd.XXXX)
-SHADOW_FILE=$(/usr/bin/mktemp /tmp/veewee-osx-shadow.XXXX)
-rm "$SHADOW_FILE"
-msg_status "Attaching input OS X installer image with shadow file.."
-hdiutil attach "$ESD" -mountpoint "$MNT_ESD" -shadow "$SHADOW_FILE" -nobrowse -owners on 
-if [ $? -ne 0 ]; then
-	[ ! -e "$ESD" ] && msg_error "Could not find $ESD in $(pwd)"
-	msg_error "Could not mount $ESD on $MNT_ESD"
-	exit 1
-fi
+
 
 msg_status "Mounting BaseSystem.."
-BASE_SYSTEM_DMG="$MNT_ESD/BaseSystem.dmg"
-MNT_BASE_SYSTEM=$(/usr/bin/mktemp -d /tmp/veewee-osx-basesystem.XXXX)
-[ ! -e "$BASE_SYSTEM_DMG" ] && msg_error "Could not find BaseSystem.dmg in $MNT_ESD"
+BASE_SYSTEM_DMG="$1"
+
+MNT_BASE_SYSTEM=$(/usr/bin/mktemp -d ${HOME}/gnuhubdata/tmp/veewee-osx-basesystem.XXXX)
+[ ! -e "$BASE_SYSTEM_DMG" ] && msg_error "Could not find BaseSystem.dmg"
 hdiutil attach "$BASE_SYSTEM_DMG" -mountpoint "$MNT_BASE_SYSTEM" -nobrowse -owners on
 if [ $? -ne 0 ]; then
-	msg_error "Could not mount $BASE_SYSTEM_DMG on $MNT_BASE_SYSTEM"
+	msg_error "Could not mount $BASE_SYSTEM_DMG"
 	exit 1
 fi
 SYSVER_PLIST_PATH="$MNT_BASE_SYSTEM/System/Library/CoreServices/SystemVersion.plist"
@@ -219,8 +182,7 @@ if [ $DMG_OS_VERS_MAJOR -lt 9 ]; then
 	hdiutil convert -format UDZO -o "$MNT_ESD/BaseSystem.dmg" "$BASE_SYSTEM_DMG_RW"
 fi
 
-msg_status "Unmounting ESD.."
-hdiutil detach "$MNT_ESD"
+
 
 if [ $DMG_OS_VERS_MAJOR -ge 9 ]; then
 	msg_status "On Mavericks the entire modified BaseSystem is our output dmg."
