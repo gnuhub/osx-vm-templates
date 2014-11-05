@@ -5,3 +5,4 @@ packer_cache
 AutoPartition-*
 packer/output-*
 *.pvm
+Install OS X Mavericks.app/

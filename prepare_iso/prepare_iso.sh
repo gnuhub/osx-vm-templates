@@ -74,7 +74,7 @@ SCRIPT_DIR="$(cd $(dirname "$0"); pwd)"
 VEEWEE_DIR="$(cd "$SCRIPT_DIR/../../../"; pwd)"
 VEEWEE_UID=$(stat -f %u "$VEEWEE_DIR")
 VEEWEE_GID=$(stat -f %g "$VEEWEE_DIR")
-DEFINITION_DIR="$(cd $SCRIPT_DIR/..; pwd)"
+DEFINITION_DIR="$(cd "$SCRIPT_DIR/.."; pwd)"
 
 if [ "$2" == "" ]; then
     msg_error "Currently an explicit output directory is required as the second argument."
