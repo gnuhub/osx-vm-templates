@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #https://github.com/mitchellh/packer/issues/1552
-export FUSION_APP_PATH="${HOME}/Applications/VMware Fusion.app"
+#export FUSION_APP_PATH="${HOME}/Applications/VMware Fusion.app"
 cd packer
 packer build \
   -only=vmware-iso \
