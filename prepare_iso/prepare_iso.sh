@@ -165,7 +165,7 @@ fi
 # build it
 BUILT_COMPONENT_PKG="$SUPPORT_DIR/tmp/veewee-config-component.pkg"
 BUILT_PKG="$SUPPORT_DIR/tmp/veewee-config.pkg"
-pkgbuild --quiet \
+pkgbuild --quiet \ 
 	--root "$SUPPORT_DIR/pkgroot" \
 	--scripts "$SUPPORT_DIR/tmp/Scripts" \
 	--identifier com.vagrantup.veewee-config \
@@ -187,7 +187,7 @@ hdiutil convert -format UDRW -o "$BASE_SYSTEM_DMG_RW" "$BASE_SYSTEM_DMG"
 
 if [ $DMG_OS_VERS_MAJOR -ge 9 ]; then
 	msg_status "Growing new BaseSystem.."
-	hdiutil resize -size 6G "$BASE_SYSTEM_DMG_RW"
+	hdiutil resize -size 8G "$BASE_SYSTEM_DMG_RW"
 fi
 
 msg_status "Mounting new BaseSystem.."
