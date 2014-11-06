@@ -173,7 +173,7 @@ pkgbuild --quiet \
 productbuild \
 	--package "$BUILT_COMPONENT_PKG" \
 	"$BUILT_PKG"
-rm -rf "$SUPPORT_DIR/pkgroot"
+#rm -rf "$SUPPORT_DIR/pkgroot"
 
 # We'd previously mounted this to check versions
 hdiutil detach "$MNT_BASE_SYSTEM"
