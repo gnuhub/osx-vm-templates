@@ -11,7 +11,8 @@ echo 'stallman ALL=(ALL) NOPASSWD: ALL' >> "$3/etc/sudoers"
 # Add vagrant to admin group memberships (even though GID 80 is enough for most things)
 VAGRANT_GUID=$(/usr/libexec/PlistBuddy -c 'Print :generateduid:0' "$3/private/var/db/dslocal/nodes/Default/users/stallman.plist")
 VAGRANT_UID=$(/usr/libexec/PlistBuddy -c 'Print :uid:0' "$3/private/var/db/dslocal/nodes/Default/users/stallman.plist")
-/usr/libexec/PlistBuddy -c 'Add :groupmembers: string $VAGRANT_GUID' "$3/private/var/db/dslocal/nodes/Default/groups/admin.plist"
+/usr/libexec/PlistBuddy -c "Add :groupmembers: string 'DF17457E-E435-4248-9325-80D1D9DA5E85'" "$3/private/var/db/dslocal/nodes/Default/groups/admin.plist"
+/usr/libexec/PlistBuddy -c "Add :users: string 'stallman'" "$3/private/var/db/dslocal/nodes/Default/groups/admin.plist"
 
 # Pre-create vagrant user folder so veewee will have somewhere to scp configinfo to
 mkdir -p "$3/Users/stallman/Library/Preferences"
