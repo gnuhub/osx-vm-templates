@@ -6,3 +6,4 @@ AutoPartition-*
 packer/output-*
 *.pvm
 Install OS X Mavericks.app/
+prepare_iso/support/pkgroot

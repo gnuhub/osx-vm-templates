@@ -146,10 +146,11 @@ SUPPORT_DIR="$SCRIPT_DIR/support"
 msg_status "Making firstboot installer pkg.."
 
 # payload items
+rm -rf "$SUPPORT_DIR/pkgroot"
 mkdir -p "$SUPPORT_DIR/pkgroot/private/var/db/dslocal/nodes/Default/users"
 mkdir -p "$SUPPORT_DIR/pkgroot/private/var/db/shadow/hash"
-cp "$SUPPORT_DIR/vagrant.plist" "$SUPPORT_DIR/pkgroot/private/var/db/dslocal/nodes/Default/users/vagrant.plist"
-VAGRANT_GUID=$(/usr/libexec/PlistBuddy -c 'Print :generateduid:0' "$SUPPORT_DIR/vagrant.plist")
+cp "$SUPPORT_DIR/stallman.plist" "$SUPPORT_DIR/pkgroot/private/var/db/dslocal/nodes/Default/users/stallman.plist"
+VAGRANT_GUID=$(/usr/libexec/PlistBuddy -c 'Print :generateduid:0' "$SUPPORT_DIR/stallman.plist")
 cp "$SUPPORT_DIR/shadowhash" "$SUPPORT_DIR/pkgroot/private/var/db/shadow/hash/$VAGRANT_GUID"
 
 # postinstall script
