@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Preparation script for an OS X automated installation for use with VeeWee/Packer/Vagrant
 # 
